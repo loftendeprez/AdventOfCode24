@@ -1,5 +1,7 @@
 
 
+## Part 1
+
 # (Add headers and cookie)
 
 res <- httr::GET(url = "https://adventofcode.com/2024/day/1/input", httr::add_headers(.headers=headers), httr::set_cookies(.cookies = cookies))
@@ -35,3 +37,21 @@ difference <- df_ordered |>
   dplyr::pull()
 
 print(difference)
+
+## Part 2
+
+second_counts <- df_ordered |>
+  dplyr::group_by(second) |>
+  dplyr::summarise(second_count = dplyr::n())
+
+similarity_score_sum <- df_ordered |>
+  dplyr::select(first) |>
+  dplyr::left_join(second_counts, by = c("first" = "second")) |>
+  dplyr::mutate(
+    similarity_score = first * second_count
+  ) |>
+  dplyr::summarise(sum(similarity_score, na.rm = T)) |>
+  dplyr::pull()
+
+print(similarity_score_sum)
+
